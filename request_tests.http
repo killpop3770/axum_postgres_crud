@@ -1,0 +1,55 @@
+@host = 127.0.0.1:8787
+@latest = 5
+
+GET http://{{host}}/
+Accept: application/json
+
+###
+
+GET http://{{host}}/tasks
+Accept: application/json
+
+###
+
+POST http://{{host}}/tasks
+Content-Type: application/json
+
+{
+  "name": "do some work",
+  "priority": 1
+}
+
+###
+
+PATCH http://{{host}}/tasks/{{latest}}
+Content-Type: application/json
+
+{
+  "name": "chill?",
+  "priority": 100
+}
+
+###
+
+PATCH http://{{host}}/tasks/{{latest}}
+Content-Type: application/json
+
+{
+  "name": "sleep"
+}
+
+###
+
+PATCH http://{{host}}/tasks/{{latest}}
+Content-Type: application/json
+
+{
+  "priority": 42
+}
+
+###
+
+DELETE http://{{host}}/tasks/{{latest}}
+Content-Type: application/json
+
+###
