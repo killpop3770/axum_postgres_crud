@@ -1,10 +1,10 @@
 use axum::http::StatusCode;
 use axum::Json;
 use axum::response::{IntoResponse, Response};
-use crate::models::{CreateTask, Task};
+use crate::models::{CreateTask, TaskRecord};
 
 pub enum TaskApiResponse {
-    Data(Vec<Task>),
+    Data(Vec<TaskRecord>),
     Created(CreateTask),
     Ok,
 }

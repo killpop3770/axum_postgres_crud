@@ -1,5 +1,5 @@
-use sqlx::{Pool, Postgres};
-use sqlx::postgres::PgPoolOptions;
+use diesel::prelude::PgConnection;
+use diesel::r2d2::{ConnectionManager, Pool};
 use tokio::net::TcpListener;
 
 use crate::routes::app_router;
@@ -9,10 +9,11 @@ mod handlers;
 mod responses;
 mod errors;
 mod routes;
+mod schemas;
 
 #[derive(Clone)]
 struct AppState {
-    db_pool: Pool<Postgres>,
+    db_pool: Pool<ConnectionManager<PgConnection>>,
 }
 
 #[tokio::main]
@@ -22,11 +23,8 @@ async fn main() {
     let server_address = std::env::var("SERVER_URL").unwrap_or("127.0.0.1:3000".to_string());
     let database_address = std::env::var("DATABASE_URL").expect("DATABASE_URL not found in .env file!");
 
-    let db_pool = PgPoolOptions::new()
-        .max_connections(10)
-        .connect(&database_address)
-        .await
-        .expect("Can not connect to database!");
+    let manager = ConnectionManager::<PgConnection>::new(&database_address);
+    let db_pool = Pool::builder().build(manager).expect("Failed to create pool!");
 
     let app_state = AppState { db_pool };
 

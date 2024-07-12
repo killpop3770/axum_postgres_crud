@@ -19,5 +19,5 @@ fn tasks(state: AppState) -> Router<AppState> {
     Router::new()
         .route("/", get(get_task).post(create_task))
         .route("/:tasks_id", patch(update_task).delete(delete_task))
-        .with_state(state.db_pool)
+        .with_state(state)
 }
