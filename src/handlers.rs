@@ -86,3 +86,7 @@ pub async fn delete_task(
 
     Ok(TaskApiResponse::Ok)
 }
+
+pub async fn handler_404() -> TaskApiError {
+    TaskApiError::NotFound
+}

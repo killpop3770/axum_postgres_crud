@@ -1,14 +1,14 @@
 use axum::http::StatusCode;
 use axum::Json;
 use axum::response::{IntoResponse, Response};
-use serde::Serialize;
 use serde_json::json;
 
 pub enum TaskApiError {
     // BadRequest,
     // Forbidden,
     // Unauthorized,
-    InternalServerError
+    InternalServerError,
+    NotFound,
 }
 
 impl IntoResponse for TaskApiError {
@@ -16,8 +16,12 @@ impl IntoResponse for TaskApiError {
         let (status, message) = match self {
             TaskApiError::InternalServerError => (
                 StatusCode::INTERNAL_SERVER_ERROR,
-                String::from("Internal server error"),
-            )
+                String::from("Internal server error!"),
+            ),
+            TaskApiError::NotFound => (
+                StatusCode::NOT_FOUND,
+                String::from("The requested resource was not found!"),
+            ),
         };
 
         (
