@@ -1,4 +1,4 @@
-use diesel::{Insertable, Queryable, Selectable};
+use diesel::{AsChangeset, Insertable, Queryable, Selectable};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Queryable, Selectable)]
@@ -16,12 +16,14 @@ pub struct CreateTaskRequest {
     pub(crate) priority: Option<i32>,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Selectable)]
+#[diesel(table_name = crate::schemas::tasks)]
 pub struct CreateTask {
     pub(crate) task_id: i32,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, AsChangeset)]
+#[diesel(table_name = crate::schemas::tasks)]
 pub struct UpdateTaskRequest {
     pub(crate) name: Option<String>,
     pub(crate) priority: Option<i32>,
