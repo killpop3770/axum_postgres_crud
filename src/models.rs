@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize)]
-pub struct TaskRow {
+pub struct Task {
     pub(crate) task_id: i32,
     pub(crate) name: String,
     pub(crate) priority: Option<i32>,
@@ -15,7 +15,7 @@ pub struct CreateTaskRequest {
 }
 
 #[derive(Serialize)]
-pub struct CreateTaskRow {
+pub struct CreateTask {
     pub(crate) task_id: i32,
 }
 

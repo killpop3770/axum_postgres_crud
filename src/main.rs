@@ -4,10 +4,12 @@ use axum::{
 };
 use sqlx::postgres::PgPoolOptions;
 use tokio::net::TcpListener;
-use crate::services::{create_task, delete_task, get_task, update_task};
+use crate::handlers::{create_task, delete_task, get_task, update_task};
 
-mod dao;
-mod services;
+mod models;
+mod handlers;
+mod responses;
+mod errors;
 
 #[tokio::main]
 async fn main() {
