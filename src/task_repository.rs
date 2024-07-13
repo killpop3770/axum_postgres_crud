@@ -49,10 +49,12 @@ pub fn update(
 
     //None fields skipped by defaults!
     //https://diesel.rs/guides/all-about-updates.html
-    diesel::update(tasks::table.find(task_id))
+    let res = diesel::update(tasks::table.find(task_id))
         .set(task_request)
         .execute(connection)
-        .map_err(adapt_database_error)?;
+        .map_err(adapt_database_error);
+
+    query_result_checker(res)?;
 
     Ok(())
 }
@@ -65,9 +67,26 @@ pub fn delete(
         .get()
         .map_err(adapt_database_error)?;
 
-    diesel::delete(tasks::table.find(task_id))
+    let res = diesel::delete(tasks::table.find(task_id))
         .execute(connection)
-        .map_err(adapt_database_error)?;
+        .map_err(adapt_database_error);
+
+    query_result_checker(res)?;
 
     Ok(())
+}
+
+fn query_result_checker(query_result: Result<usize, DBError>) -> Result<(), DBError> {
+    return match query_result {
+        Ok(res) => {
+            if res == 0 {
+                Err(DBError::NotFound)
+            } else {
+                Ok(())
+            }
+        }
+        Err(db_error) => {
+            Err(db_error)
+        }
+    }
 }

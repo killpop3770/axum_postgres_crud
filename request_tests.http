@@ -1,6 +1,6 @@
 @host = 127.0.0.1:8787
 @version = v1
-@latest = 8
+@latest = 90
 
 GET http://{{host}}/
 Accept: application/json
