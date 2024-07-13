@@ -10,6 +10,7 @@ mod responses;
 mod errors;
 mod routes;
 mod schemas;
+mod task_repository;
 
 #[derive(Clone)]
 struct AppState {
