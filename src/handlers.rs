@@ -2,7 +2,7 @@ use axum::extract::{Path, State};
 use axum::Json;
 
 use crate::AppState;
-use crate::errors::TaskApiError;
+use crate::errors::{DBError, TaskApiError};
 use crate::models::{CreateTask, CreateTaskRequest, UpdateTaskRequest};
 use crate::responses::TaskApiResponse;
 use crate::task_repository::{delete, get_all, insert, update};
@@ -27,7 +27,10 @@ pub async fn update_task(
     Path(task_id): Path<i32>,
     Json(task_request): Json<UpdateTaskRequest>,
 ) -> Result<TaskApiResponse, TaskApiError> {
-    update(&state.db_pool, task_id, task_request).map_err(TaskApiError::DBError)?;
+    update(&state.db_pool, task_id, task_request).map_err(|db_error| match db_error {
+        DBError::NotFound => TaskApiError::NotFoundData(task_id),
+        DBError::DatabaseError => TaskApiError::InternalServerError,
+    })?;
     Ok(TaskApiResponse::Ok)
 }
 
@@ -35,10 +38,13 @@ pub async fn delete_task(
     State(state): State<AppState>,
     Path(task_id): Path<i32>,
 ) -> Result<TaskApiResponse, TaskApiError> {
-    delete(&state.db_pool, task_id).map_err(TaskApiError::DBError)?;
+    delete(&state.db_pool, task_id).map_err(|db_error| match db_error {
+        DBError::NotFound => TaskApiError::NotFoundData(task_id),
+        DBError::DatabaseError => TaskApiError::InternalServerError,
+    })?;
     Ok(TaskApiResponse::Ok)
 }
 
 pub async fn handler_404() -> TaskApiError {
-    TaskApiError::NotFound
+    TaskApiError::NotFoundPage
 }

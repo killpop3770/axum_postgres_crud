@@ -10,14 +10,15 @@ pub enum TaskApiError {
     // Forbidden,
     // Unauthorized,
     InternalServerError,
-    NotFound,
+    NotFoundPage,
+    NotFoundData(i32),
     DBError(DBError),
 }
 
 impl IntoResponse for TaskApiError {
     fn into_response(self) -> Response {
         let (status, message) = match self {
-            TaskApiError::NotFound => (
+            TaskApiError::NotFoundPage => (
                 StatusCode::NOT_FOUND,
                 String::from("The requested resource was not found!"),
             ),
