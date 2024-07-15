@@ -1,6 +1,21 @@
 @host = 127.0.0.1:8787
 @version = v1
 @latest = 90
+@auth_token = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJraWxscG9wMzc3MCIsImV4cCI6MTcyMTA3MjQ3NX0.L1CtPgHlQ9k-Sluh_KyW7ObibVp4cm85mc0f8HbZ0yA
+
+###
+POST http://{{host}}/{{version}}/login
+Content-Type: application/json
+
+{
+  "login": "killpop3770",
+  "password": "zhopka123"
+}
+
+###
+GET http://{{host}}/{{latest}}/login_info
+Authorization: Bearer {{auth_token}}
+
 
 GET http://{{host}}/
 Accept: application/json

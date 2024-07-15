@@ -8,7 +8,7 @@ use serde_json::json;
 #[derive(Debug)]
 pub enum TaskApiError {
     // Forbidden,
-    // Unauthorized,
+    Unauthorized,
     InternalServerError,
     NotFoundPage,
     NotFoundData(i32),
@@ -18,6 +18,10 @@ pub enum TaskApiError {
 impl IntoResponse for TaskApiError {
     fn into_response(self) -> Response {
         let (status, message) = match self {
+            TaskApiError::Unauthorized => (
+                StatusCode::UNAUTHORIZED,
+                String::from("You are unauthorized!")
+            ),
             TaskApiError::NotFoundPage => (
                 StatusCode::NOT_FOUND,
                 String::from("The requested resource was not found!"),

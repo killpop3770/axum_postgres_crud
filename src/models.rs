@@ -1,6 +1,23 @@
 use diesel::{AsChangeset, Insertable, Queryable, Selectable};
 use serde::{Deserialize, Serialize};
 
+#[derive(Serialize, Deserialize)]
+pub struct UserLoginInfo {
+    pub(crate) login: String,
+    pub(crate) password: String,
+}
+
+#[derive(Serialize)]
+pub struct UserLoginResponse {
+    pub(crate) token: String,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct TokenClaims {
+    pub(crate) sub: String,
+    pub(crate) exp: usize,
+}
+
 #[derive(Serialize, Queryable, Selectable)]
 #[diesel(table_name = crate::schemas::tasks)]
 pub struct TaskRecord {
